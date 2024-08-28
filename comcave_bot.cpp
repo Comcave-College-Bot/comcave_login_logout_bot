@@ -40,7 +40,7 @@ void login(const std::string& username, const std::string& password) {
 }
 
 void logout(const std::string& username, const std::string& password) {
-    // Python-Skript für den Web-Automatisierungs-Logout aufrufen
+    // Python-Skript für den Web-Automatisierungs-Logout aufrufen 
     std::string command = "python logout.py " + username + " " + password;
     system(command.c_str());
 
