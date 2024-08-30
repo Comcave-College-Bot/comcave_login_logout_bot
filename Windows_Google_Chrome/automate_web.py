@@ -1,49 +1,88 @@
+import subprocess
+import sys
+import configparser
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import configparser
-import sys
+from webdriver_manager.chrome import ChromeDriverManager
 
+# Funktion zum Lesen der Konfiguration aus der setup.ini
 def read_config(key):
     config = configparser.ConfigParser()
     config.read('setup.ini')
     return config['DEFAULT'].get(key, '')
 
-def parseTime():
-    """Prüft und parst eine Zeit im Format HH:MM. Gibt 5 Versuche."""
-    attempts = 0
-    while attempts < 5:
-        try:
-            timeStr = input("Bitte geben Sie die Zeit ein (HH:MM): ")
-            hour, minute = map(int, timeStr.split(':'))
-            if hour < 0 or hour > 23:
-                raise ValueError(f"Ungültige Stunde: {hour}. Stunde muss zwischen 0 und 23 liegen.")
-            if minute < 0 or minute > 59:
-                raise ValueError(f"Ungültige Minute: {minute}. Minute muss zwischen 0 und 59 liegen.")
-            return hour, minute
-        except ValueError as ve:
-            attempts += 1
-            print(f"Ungültiges Zeitformat: {ve}. Versuche verbleibend: {5 - attempts}")
+# Funktion zum Schreiben in die setup.ini
+def write_config(key, value):
+    config = configparser.ConfigParser()
+    config.read('setup.ini')
+    if 'DEFAULT' not in config:
+        config['DEFAULT'] = {}
+    config['DEFAULT'][key] = value
+    with open('setup.ini', 'w') as configfile:
+        config.write(configfile)
 
-    print("Maximale Anzahl an Versuchen erreicht. Programm wird beendet.")
-    sys.exit(1)
+# Funktion zur Installation von Python-Paketen
+def install_package(package_name):
+    try:
+        print(f"Installiere {package_name}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', package_name])
+        print(f"{package_name} wurde erfolgreich installiert.")
+        return True
+    except Exception as e:
+        print(f"Fehler bei der Installation von {package_name}: {e}")
+        return False
 
+# Funktion zum Prüfen und Installieren von benötigten Paketen
+def check_and_install_packages():
+    # Überprüfen, ob selenium installiert ist
+    selenium_installed = False
+    webdriver_manager_installed = False
+
+    try:
+        import selenium
+        selenium_installed = True
+    except ImportError:
+        print("selenium ist nicht installiert.")
+
+    try:
+        from webdriver_manager.chrome import ChromeDriverManager
+        webdriver_manager_installed = True
+    except ImportError:
+        print("webdriver-manager ist nicht installiert.")
+
+    # Installiere fehlende Pakete und aktualisiere die setup.ini
+    if not selenium_installed:
+        if install_package('selenium'):
+            write_config('selenium_installed', 'true')
+        else:
+            print("Installation von selenium fehlgeschlagen.")
+    
+    if not webdriver_manager_installed:
+        if install_package('webdriver-manager'):
+            write_config('webdriver_manager_installed', 'true')
+        else:
+            print("Installation von webdriver-manager fehlgeschlagen.")
+
+# Funktion zur Ausführung der Web-Automatisierung
 def automate_web():
-    # Pfad zum ChromeDriver aus der setup.ini lesen
-    chrome_driver_path = read_config("ChromeDriverPath")
-
-    # Chrome Optionen
-    chrome_service = Service(chrome_driver_path)
+    # Chrome Optionen und ChromeDriver über den WebDriverManager installieren
+    chrome_service = Service(ChromeDriverManager().install())
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Headless mode (falls kein UI benötigt)
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--incognito")  # Inkognito-Modus
 
     # WebDriver initialisieren
-    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+    try:
+        driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+    except Exception as e:
+        print(f"Fehler beim Starten des WebDrivers: {e}")
+        return
 
     # Login-Daten aus der setup.ini lesen
     username = read_config("username")
@@ -95,8 +134,13 @@ def automate_web():
         # Schließe den Browser
         driver.quit()
 
-if __name__ == "__main__":
-    # Zeit abfragen und validieren
-    hour, minute = parseTime()
-    print(f"Die Zeit ist {hour:02d}:{minute:02d}.")
+# Hauptfunktion
+def main():
+    # Überprüfen und Installieren der benötigten Pakete
+    check_and_install_packages()
+
+    # Fortfahren mit der Web-Automatisierung
     automate_web()
+
+if __name__ == "__main__":
+    main()

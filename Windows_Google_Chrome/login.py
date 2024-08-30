@@ -1,13 +1,40 @@
+import subprocess
+import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import sys
 
+# Überprüft und installiert Pakete, falls sie nicht vorhanden sind
+def check_and_install_packages():
+    # Überprüfen, ob selenium installiert ist
+    try:
+        import selenium
+    except ImportError:
+        install_package('selenium')
+
+    # Überprüfen, ob webdriver-manager installiert ist
+    try:
+        from webdriver_manager.chrome import ChromeDriverManager
+    except ImportError:
+        install_package('webdriver-manager')
+
+# Funktion zur Installation von Python-Paketen
+def install_package(package_name):
+    try:
+        print(f"Installiere {package_name}...")
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', package_name])
+        print(f"{package_name} wurde erfolgreich installiert.")
+    except Exception as e:
+        print(f"Fehler bei der Installation von {package_name}: {e}")
+
+# Führt den Login-Vorgang durch
 def login(username, password):
-    chrome_service = Service(r'C:\Users\CC-Student\projects\comcave_login_bot\chromedriver.exe')
+    # Verwendet webdriver-manager, um den ChromeDriver zu installieren und zu verwenden
+    from webdriver_manager.chrome import ChromeDriverManager
+    chrome_service = Service(ChromeDriverManager().install())
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--window-size=1920,1080")
@@ -17,7 +44,6 @@ def login(username, password):
 
     try:
         driver.get("https://portal.cc-student.com/index.php?cmd=login")
-
         username_input = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.NAME, "login_username"))
         )
@@ -42,7 +68,7 @@ def login(username, password):
         kommen_button = WebDriverWait(driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, "//input[@class='buttonKommen']"))
         )
-        
+
         driver.execute_script("arguments[0].click();", kommen_button)
         print("Kommen Button erfolgreich geklickt!")
 
@@ -53,6 +79,10 @@ def login(username, password):
         driver.quit()
 
 if __name__ == "__main__":
+    # Überprüfen und Installieren der benötigten Pakete
+    check_and_install_packages()
+
+    # Login ausführen
     username = sys.argv[1]
     password = sys.argv[2]
     login(username, password)
