@@ -17,7 +17,7 @@ Lade das Projekt herunter oder klone das Repository:
 
 - **Download des Programms**: [Hier herunterladen](https://www.dropbox.com/scl/fo/5kqktdn4x09v4bd921xdr/ANw4Sa3HWh80SLlJtmUWLPo?rlkey=3k6ejahxuceorti52ky4idouz&st=ws8ms32r&dl=0)
 
-Einschränkungen
+## Einschränkungen
 Nicht auf Standort-PCs verwendbar
 Dieses Programm kann nicht auf den PCs am Standort verwendet werden, da:
 
