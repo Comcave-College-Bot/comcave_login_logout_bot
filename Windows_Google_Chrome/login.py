@@ -9,13 +9,11 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Überprüft und installiert Pakete, falls sie nicht vorhanden sind
 def check_and_install_packages():
-    # Überprüfen, ob selenium installiert ist
     try:
         import selenium
     except ImportError:
         install_package('selenium')
 
-    # Überprüfen, ob webdriver-manager installiert ist
     try:
         from webdriver_manager.chrome import ChromeDriverManager
     except ImportError:
@@ -32,7 +30,6 @@ def install_package(package_name):
 
 # Führt den Login-Vorgang durch
 def login(username, password):
-    # Verwendet webdriver-manager, um den ChromeDriver zu installieren und zu verwenden
     from webdriver_manager.chrome import ChromeDriverManager
     chrome_service = Service(ChromeDriverManager().install())
     chrome_options = Options()
@@ -79,10 +76,7 @@ def login(username, password):
         driver.quit()
 
 if __name__ == "__main__":
-    # Überprüfen und Installieren der benötigten Pakete
     check_and_install_packages()
-
-    # Login ausführen
     username = sys.argv[1]
     password = sys.argv[2]
     login(username, password)

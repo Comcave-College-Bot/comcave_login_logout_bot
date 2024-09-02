@@ -9,13 +9,11 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Überprüft und installiert Pakete, falls sie nicht vorhanden sind
 def check_and_install_packages():
-    # Überprüfen, ob selenium installiert ist
     try:
         import selenium
     except ImportError:
         install_package('selenium')
 
-    # Überprüfen, ob webdriver-manager installiert ist
     try:
         from webdriver_manager.chrome import ChromeDriverManager
     except ImportError:
@@ -78,10 +76,7 @@ def logout(username, password):
         driver.quit()
 
 if __name__ == "__main__":
-    # Überprüfen und Installieren der benötigten Pakete
     check_and_install_packages()
-
-    # Logout ausführen
     username = sys.argv[1]
     password = sys.argv[2]
     logout(username, password)
