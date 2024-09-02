@@ -1,6 +1,7 @@
 # Comcave Login/Logout Bot
 
 Dieses Programm automatisiert den Login und Logout für das CC Portal zur Zeiterfassung. Das Programm verwendet Selenium und WebDriver Manager, um den Prozess zu automatisieren. Bei jedem Start des Programms wird geprüft, ob Selenium und der WebDriver Manager installiert sind und ob die passende Version des ChromeDrivers vorhanden ist. Falls nicht, werden diese automatisch heruntergeladen und aktualisiert.
+Die Zeit muss mit einem Doppelpunkt getrennt werden(z.B. 13:30 bis 19:00).
 
 ## Voraussetzungen
 
