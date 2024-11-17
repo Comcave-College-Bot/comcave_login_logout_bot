@@ -1,2 +1,1 @@
-#define MAINICON 101
-MAINICON ICON "C:\\Users\\CC-Student\\projects\\comcave_login_logout_bot\\Windows_Google_Chrome\\favicon.ico"
+1 ICON "favicon.ico"

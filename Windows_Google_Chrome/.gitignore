@@ -1,2 +1,62 @@
-.vscode
-.bat
+# Python
+
+__pycache__/
+
+*.py[cod]
+
+*$py.class
+
+
+
+# Build files
+
+*.ilk
+
+*.obj
+
+*.pdb
+
+*.res
+
+.bat/
+
+build.bat
+
+vc140.pdb
+
+resources.rc
+
+comcave_bot.ilk
+
+comcave_bot.obj
+
+comcave_bot.pdb
+
+
+
+# IDE
+
+.vscode/
+
+.idea/
+
+
+
+# Config
+
+setup.ini
+
+
+
+# Logs
+
+error_log.txt
+
+chromedriver.log
+
+
+
+# Chrome specific
+
+.wdm/
+

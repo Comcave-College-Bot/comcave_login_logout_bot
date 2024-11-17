@@ -1,0 +1,33 @@
+@echo off
+start /b pythonw gui.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
